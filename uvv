@@ -1,0 +1,166 @@
+uvv_check() {
+    if ! command -v conda &> /dev/null; then
+        echo "Error: conda is not installed" >&2
+        return 1
+    fi
+
+    if ! command -v uv &> /dev/null; then
+        echo "Error: uv is not installed" >&2
+        return 1
+    fi
+}
+
+uvv_create() {
+    while getopts ":n:p:" opt; do
+        case $opt in
+            n) uv_environment="$OPTARG"
+            ;;
+            p) python_version="$OPTARG"
+            ;;
+            \?) echo "Invalid option -$OPTARG" >&2
+                return 1
+            ;;
+        esac
+    done
+
+    if [ -d "$HOME"/.venv/"$uv_environment" ]; then
+        echo "uv environment $uv_environment already exists"
+        return 1
+    fi
+
+    if [ -z "$uv_environment" ] || [ -z "$python_version" ]; then
+        echo "Usage: uvv create -n <uv_environment> -p <python_version>"
+        return 1
+    fi
+
+    env_name="uv_${python_version//./}"
+    if ! conda info --envs | grep -q "$env_name"; then
+        echo "Creating conda environment: $env_name"
+        if ! conda create -n "$env_name" python="$python_version" -y; then
+            echo "Error: Failed to create conda environment" >&2
+            return 1
+        fi
+    fi
+
+    (
+        echo "Activating conda environment: $env_name"
+        conda activate "$env_name"
+
+        temp=$(pwd)
+        cd "$HOME"/.venv || mkdir "$HOME"/.venv || return 1
+        cd "$HOME"/.venv || return 1
+        uv venv "$uv_environment" --seed -p "$python_version" || return 1
+        conda deactivate
+        cd "$temp" || return 1
+    )
+
+    echo "Environment setup complete for uv environment: $uv_environment with Python $python_version"
+    echo "Run 'uvv activate $uv_environment' to activate the environment"
+}
+
+uvv_remove() {
+    if [ -z "$1" ]; then
+        echo "Usage: uvv remove <uv_environment>"
+        return 1
+    fi
+
+    uv_environment="$1"
+
+    if [ ! -d "$HOME"/.venv/"$uv_environment" ]; then
+        echo "uv environment $uv_environment does not exist"
+        return 1
+    fi
+    uvv_deactivate
+    echo "Removing uv environment: $uv_environment"
+    rm -rf "$HOME"/.venv/"$uv_environment"
+    echo "uv environment $uv_environment removed"
+}
+
+uvv_list() {
+    if [ -z "$(ls -A "$HOME"/.venv)" ]; then
+        echo "No uv environment found"
+    else
+        ls -1 "$HOME"/.venv
+    fi
+}
+
+uvv_activate() {
+    if [ -z "$1" ]; then
+        echo "Usage: uvv activate <uv_environment>"
+        return 1
+    fi
+
+    uv_environment="$1"
+
+    if [ ! -d "$HOME"/.venv/"$uv_environment" ]; then
+        echo "uv environment $uv_environment does not exist"
+        return 1
+    fi
+
+    source "$HOME"/.venv/"$uv_environment"/bin/activate && \
+    echo "Activated uv environment: $uv_environment"
+}
+
+uvv_deactivate() {
+    if [ -z "$VIRTUAL_ENV" ]; then
+        echo "No uv environment is currently activated"
+        return 1
+    fi
+    echo "Deactivated uv environment: $VIRTUAL_ENV"
+    deactivate
+}
+
+uvv_install() {
+    if [ -z "$VIRTUAL_ENV" ]; then
+        echo "No uv environment is currently activated"
+        return 1
+    fi
+    uv pip install "$@"
+}
+
+uvv_help() {
+    echo "Usage: uvv <command> [<args>]"
+    echo "Commands:"
+    echo "  create -n <uv_environment> -p <python_version>"
+    echo "  remove <uv_environment>"
+    echo "  list"
+    echo "  activate <uv_environment>"
+    echo "  install <package>"
+    echo "  deactivate"
+}
+
+uvv() {
+    uvv_check || return 1
+    case "$1" in
+        create)
+            shift
+            uvv_create "$@"
+            ;;
+        remove)
+            shift
+            uvv_remove "$@"
+            ;;
+        list)
+            uvv_list
+            ;;
+        activate)
+            shift
+            uvv_activate "$@"
+            ;;
+        install)
+            shift
+            uvv_install "$@"
+            ;;
+        deactivate)
+            uvv_deactivate
+            ;;
+        help)
+            uvv_help
+            ;;
+        *)
+            echo "Unsupported command: $1"
+            echo "Run 'uvv help' for usage"
+            return 1
+            ;;
+    esac
+}
