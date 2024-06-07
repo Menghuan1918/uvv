@@ -45,3 +45,7 @@ uvv remove gpt
 ```
 
 更多的详细你可以参照`uvv help`，或者去[我的博客康康](https://blog.menghuan1918.com/posts/UV_python_packge_manage.html)。
+
+### 在VSCode中使用
+
+指定下位置就行，例如刚刚这个的环境位置在`/home/menghuan_go/.venv/gpt/bin/python`

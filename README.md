@@ -51,3 +51,7 @@ uvv remove gpt
 ```
 
 For more details you can refer to `uvv help`.
+
+### Use in VSCode
+
+Just specify the location, e.g. the environment location for this is at `/home/menghuan_go/.venv/gpt/bin/python`.
