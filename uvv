@@ -96,8 +96,16 @@ uvv_activate() {
         echo "uv environment $uv_environment does not exist"
         return 1
     fi
-
-    source "$HOME"/.venv/"$uv_environment"/bin/activate && \
+    uvv_deactivate
+    # 首先尝试/bin/activate，如果不存在则尝试Scripts\activate
+    if [ -f "$HOME"/.venv/"$uv_environment"/bin/activate ]; then
+        source "$HOME"/.venv/"$uv_environment"/bin/activate
+    elif [ -f "$HOME"/.venv/"$uv_environment"/Scripts/activate ]; then
+        source "$HOME"/.venv/"$uv_environment"/Scripts/activate
+    else
+        echo "Error: Failed to activate uv environment" >&2
+        return 1
+    fi
     echo "Activated uv environment: $uv_environment"
 }
 
