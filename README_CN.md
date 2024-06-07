@@ -49,3 +49,6 @@ uvv remove gpt
 ### 在VSCode中使用
 
 指定下位置就行，例如刚刚这个的环境位置在`/home/menghuan_go/.venv/gpt/bin/python`
+
+
+![image](https://github.com/Menghuan1918/uvv/assets/122662527/242145a8-d19b-4445-b5a4-f2ded74d4c34)
