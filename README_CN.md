@@ -44,4 +44,4 @@ uvv deactivate
 uvv remove gpt
 ```
 
-更多的详细你可以参照`uvv help`
+更多的详细你可以参照`uvv help`，或者去[我的博客康康](https://blog.menghuan1918.com/posts/UV_python_packge_manage.html)。
