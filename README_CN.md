@@ -13,11 +13,18 @@
 ```bash
 git clone https://github.com/Menghuan1918/uvv
 cd uvv
+git pull
 sh Install.sh
 ```
 
-重启你的终端就好啦。
+重启你的终端就好啦。其应该可用于：
+- bash(Linux)
+- zsh(Linux)
+- git bash(windows)
 
+<span><img src="https://github.com/Menghuan1918/uvv/assets/122662527/6139326f-690d-4f3f-9916-efa737041df6" alt="gitbash"> <img src="https://github.com/Menghuan1918/uvv/assets/122662527/c7d203aa-5f11-4907-a5cb-7158f2da7a3e" alt="zsh"> </span>
+
+或者你也可以手动下载`uvv`文件并将其加到你的终端配置文件中`source uvv`。
 ## 使用
 
 ### 创建一个名为gpt，Python版本3.11的虚拟环境
