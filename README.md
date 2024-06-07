@@ -55,3 +55,5 @@ For more details you can refer to `uvv help`.
 ### Use in VSCode
 
 Just specify the location, e.g. the environment location for this is at `/home/menghuan_go/.venv/gpt/bin/python`.
+
+![image](https://github.com/Menghuan1918/uvv/assets/122662527/242145a8-d19b-4445-b5a4-f2ded74d4c34)
