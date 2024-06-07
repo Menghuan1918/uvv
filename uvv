@@ -47,7 +47,7 @@ uvv_create() {
         conda activate "$env_name"
 
         temp=$(pwd)
-        cd "$HOME"/.venv || mkdir "$HOME"/.venv || return 1
+        mkdir -p "$HOME"/.venv || return 1
         cd "$HOME"/.venv || return 1
         uv venv "$uv_environment" --seed -p "$python_version" || return 1
         conda deactivate
