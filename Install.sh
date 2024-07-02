@@ -1,12 +1,12 @@
 #!/bin/bash
 
 HOME_DIR="$HOME"
-if ! command -v conda &> /dev/null; then
+if ! command conda -V &> /dev/null; then
     echo "Error: conda is not installed" >&2
     return 1
 fi
 
-if ! command -v uv &> /dev/null; then
+if ! command uv -V &> /dev/null; then
     echo "Error: uv is not installed" >&2
     return 1
 fi
